@@ -14,3 +14,6 @@ Es la carpeta fiber-orchestrator. Hecho en Go, Fiber.
 
 ## Componente subcriptios
 Es la carpeta fast-sub. Hecho en Python, FastApi.
+
+## Jmeter
+Http request es el documento de configuración de jmeter.
