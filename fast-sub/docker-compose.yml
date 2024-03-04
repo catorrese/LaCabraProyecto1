@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  sub:
+    build: .
+    volumes:
+      - .:/usr/app
+    ports:
+      - 6450:80
+    networks:
+      - sub_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 500M
+
+networks:
+  sub_net:
+    driver: bridge
+    name: sub_net
