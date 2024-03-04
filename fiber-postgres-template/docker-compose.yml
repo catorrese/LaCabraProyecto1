@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  sportman_db:
+    image: postgres:15-bullseye
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_PORT: 5432
+    ports:
+      - 6200:5432
+    networks:
+      - sportman_net
+    deploy:  
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 300M
+
+  sportman:
+    build:
+      context: .
+      dockerfile: Dockerfile.develop
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 6250:80
+    networks:
+      - sportman_net
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1000M
+    depends_on:
+      sportman_db:
+        condition: service_started
+
+networks:
+  sportman_net:
+    driver: bridge
+    name: sportman_net
