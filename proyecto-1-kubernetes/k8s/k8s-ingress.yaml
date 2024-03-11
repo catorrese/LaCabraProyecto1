@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gateway-ingress-8
+  labels:
+    name: gateway-ingress-8
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /auth
+        backend:
+          service:
+            name: service-auth
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /sport
+        backend:
+          service:
+            name: service-sport
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /sub
+        backend:
+          service:
+            name: service-sub
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /orchestrator
+        backend:
+          service:
+            name: service-orchestrator
+            port: 
+              number: 80
