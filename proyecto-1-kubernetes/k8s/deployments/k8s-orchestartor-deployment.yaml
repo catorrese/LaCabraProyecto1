@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator
+  labels:
+    app: orchestrator
+spec:
+  replicas: 12
+  selector:
+    matchLabels:
+      app: orchestrator
+  template:
+    metadata:
+      labels:
+        app: orchestrator
+    spec:
+      containers:
+        - name: orchestrator
+          image: $IMAGE_ORCHESTRATOR
+          resources:
+            limits:
+              memory: "100Mi"
+              cpu: "0.2"
+            requests:
+              memory: "100Mi"
+              cpu: "0.2"
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          env:
+            - name: "HOST_AUTH"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: HOST_AUTH
+            - name: "HOST_SUB"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: HOST_SUB
+            - name: "HOST_SPORT"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: HOST_SPORT
+                  
+---
+
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: orchestrator-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 80
+    type: HTTP
+    requestPath: /orchestrator/ping
