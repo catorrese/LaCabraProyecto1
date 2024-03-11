@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sport
+  labels:
+    app: sport
+spec:
+  replicas: 14
+  selector:
+    matchLabels:
+      app: sport
+  template:
+    metadata:
+      labels:
+        app: sport
+    spec:
+      containers:
+        - name: sport
+          image: $IMAGE_SPORT
+          resources:
+            limits:
+              memory: "50Mi"
+              cpu: "0.15"
+            requests:
+              memory: "50Mi"
+              cpu: "0.15"
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          env:
+            - name: "DB_SPORT_USER"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: DB_SPORT_USER
+            - name: "DB_SPORT_HOST"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: DB_SPORT_HOST
+            - name: "DB_SPORT_NAME"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: DB_SPORT_NAME
+            - name: "DB_SPORT_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: DB_SPORT_PASSWORD
+            - name: "DB_SPORT_PORT"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: DB_SPORT_PORT
+            - name: "HOST_AUTH"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: HOST_AUTH_FOR_SPORT
+                  
+---
+
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: sport-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 80
+    type: HTTP
+    requestPath: /sport/ping

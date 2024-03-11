@@ -1,0 +1,4 @@
+0-entrypoint-secrets.sh
+1-entrypoint-deployments.sh
+2-entrypoint-service.sh
+5-entrypoint-ingress.sh

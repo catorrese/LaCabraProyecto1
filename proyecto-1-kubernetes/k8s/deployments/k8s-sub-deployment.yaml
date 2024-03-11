@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sub
+  labels:
+    app: sub
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: sub
+  template:
+    metadata:
+      labels:
+        app: sub
+    spec:
+      containers:
+        - name: sub
+          image: $IMAGE_SUB
+          resources:
+            limits:
+              memory: "15Mi"
+              cpu: "0.02"
+            requests:
+              memory: "15Mi"
+              cpu: "0.02"
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+                  
+---
+
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: sub-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 80
+    type: HTTP
+    requestPath: /sub/ping
